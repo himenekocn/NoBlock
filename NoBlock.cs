@@ -86,19 +86,23 @@ public class NoBlock : BasePlugin
             return HookResult.Continue;
         }
 
-        // Stores the PlayerPawn associated with the CCSPlayerController within the variable pawn
-        CHandle<CCSPlayerPawn> pawn = player.PlayerPawn;
-
         // Lambda version is required to pass custom parameters
-        Server.NextFrame(() => PlayerSpawnNextFrame(player, pawn));
+        Server.NextFrame(() => PlayerSpawnNextFrame(player));
 
         return HookResult.Continue;
     }
 
 
     // This is called upon just after the player spawns
-    private void PlayerSpawnNextFrame(CCSPlayerController player, CHandle<CCSPlayerPawn> pawn)
+    private void PlayerSpawnNextFrame(CCSPlayerController player)
     {
+        if (!player.PlayerPawn.IsValid)
+        {
+            return;
+        }
+
+        CHandle<CCSPlayerPawn> pawn = player.PlayerPawn;
+        
         // Changes the player's collision to 16, allowing the player to pass through other players while still take damage from bullets and knife attacks
         pawn.Value.Collision.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
 
