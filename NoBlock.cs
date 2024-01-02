@@ -96,6 +96,11 @@ public class NoBlock : BasePlugin
     // This is called upon just after the player spawns
     private void PlayerSpawnNextFrame(CCSPlayerController player)
     {
+        if(player.Connected != PlayerConnectedState.PlayerConnected)
+        {
+            return;
+        }
+        
         if (!player.PlayerPawn.IsValid)
         {
             return;
@@ -108,10 +113,10 @@ public class NoBlock : BasePlugin
         player.PlayerPawn.Value.Collision.CollisionAttribute.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
 
         // Updates the CollisionRulesChanged for the specific player
-        VirtualFunctionVoid<nint> collisionRulesChanged = new VirtualFunctionVoid<nint>(pawn.Value.Handle, OnCollisionRulesChangedOffset.Get());
+        VirtualFunctionVoid<nint> collisionRulesChanged = new VirtualFunctionVoid<nint>(player.PlayerPawn.Value.Handle, OnCollisionRulesChangedOffset.Get());
 
         // Invokes the updated CollisionRulesChanged information to ensure the player's collision is correctly set
-        collisionRulesChanged.Invoke(pawn.Value.Handle);
+        collisionRulesChanged.Invoke(player.PlayerPawn.Value.Handle);
     }
 }
 
