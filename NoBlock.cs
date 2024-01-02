@@ -100,14 +100,12 @@ public class NoBlock : BasePlugin
         {
             return;
         }
-
-        CHandle<CCSPlayerPawn> pawn = player.PlayerPawn;
         
         // Changes the player's collision to 16, allowing the player to pass through other players while still take damage from bullets and knife attacks
-        pawn.Value.Collision.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
+        player.PlayerPawn.Value.Collision.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
 
         // Changes the player's CollisionAttribute to the collision type used for dissolving objects 
-        pawn.Value.Collision.CollisionAttribute.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
+        player.PlayerPawn.Value.Collision.CollisionAttribute.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
 
         // Updates the CollisionRulesChanged for the specific player
         VirtualFunctionVoid<nint> collisionRulesChanged = new VirtualFunctionVoid<nint>(pawn.Value.Handle, OnCollisionRulesChangedOffset.Get());
