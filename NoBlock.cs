@@ -82,23 +82,29 @@ public class NoBlock : BasePlugin
         {
             return HookResult.Continue;
         }
+
+        CHandle<CCSPlayerPawn> pawn = player.PlayerPawn;
         
         Server.NextFrame(() =>
         {
-            if (player.PlayerPawn.IsValid)
-            {
-                // Changes the player's collision to 16, allowing the player to pass through other players while still take damage from bullets and knife attacks
-                player.PlayerPawn.Value.Collision.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
+            try
+			{
+				if (pawn.IsValid)
+                {
+                    // Changes the player's collision to 16, allowing the player to pass through other players while still take damage from bullets and knife attacks
+                    pawn.Value.Collision.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
 
-                // Changes the player's CollisionAttribute to the collision type used for dissolving objects 
-                player.PlayerPawn.Value.Collision.CollisionAttribute.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
+                    // Changes the player's CollisionAttribute to the collision type used for dissolving objects 
+                    pawn.Value.Collision.CollisionAttribute.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
 
-                // Updates the CollisionRulesChanged for the specific player
-                VirtualFunctionVoid<nint> collisionRulesChanged = new VirtualFunctionVoid<nint>(player.PlayerPawn.Value.Handle, OnCollisionRulesChangedOffset.Get());
+                    // Updates the CollisionRulesChanged for the specific player
+                    VirtualFunctionVoid<nint> collisionRulesChanged = new VirtualFunctionVoid<nint>(pawn.Value.Handle, OnCollisionRulesChangedOffset.Get());
 
-                // Invokes the updated CollisionRulesChanged information to ensure the player's collision is correctly set
-                collisionRulesChanged.Invoke(player.PlayerPawn.Value.Handle);
-            }
+                    // Invokes the updated CollisionRulesChanged information to ensure the player's collision is correctly set
+                    collisionRulesChanged.Invoke(pawn.Value.Handle);
+                }
+			}
+			catch (Exception) { }
         });
 
         return HookResult.Continue;
