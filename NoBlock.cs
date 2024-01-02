@@ -52,15 +52,12 @@ public class NoBlock : BasePlugin
         RegisterEventHandler<EventPlayerSpawn>(Event_PlayerSpawn, HookMode.Post);
     }
 
-
-
     /////////////////////
     // - Game Events - //
     /////////////////////
     
     // A list of the supported events and their names can be found here:
     // -    https://github.com/roflmuffin/CounterStrikeSharp/blob/739dcf4da98dbf16291ef466536d2b27cfd56cdb/managed/CounterStrikeSharp.API/Core/GameEvents.g.cs
-
 
     // This happens when a player spawns
     private HookResult Event_PlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
@@ -88,11 +85,6 @@ public class NoBlock : BasePlugin
         
         Server.NextFrame(() =>
         {
-            if (!player.PlayerPawn.IsValid)
-            {
-                return ;
-            }
-            
             // Changes the player's collision to 16, allowing the player to pass through other players while still take damage from bullets and knife attacks
             player.PlayerPawn.Value.Collision.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DISSOLVING;
 
